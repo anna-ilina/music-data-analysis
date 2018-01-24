@@ -1,0 +1,22 @@
+{u'is_local': False, 
+u'track': 
+	{u'album': 
+		{u'album_type': u'single', u'name': u'Scary Hours', u'external_urls': {u'spotify': u'https://open.spotify.com/album/1r0DOIO0iC0bGpMtWRFdde'}, u'uri': u'spotify:album:1r0DOIO0iC0bGpMtWRFdde', u'href': u'https://api.spotify.com/v1/albums/1r0DOIO0iC0bGpMtWRFdde', u'artists': [{u'name': u'Drake', u'external_urls': {u'spotify': u'https://open.spotify.com/artist/3TVXtAsR1Inumwj472S9r4'}, u'uri': u'spotify:artist:3TVXtAsR1Inumwj472S9r4', u'href': u'https://api.spotify.com/v1/artists/3TVXtAsR1Inumwj472S9r4', u'type': u'artist', u'id': u'3TVXtAsR1Inumwj472S9r4'}], u'images': [{u'url': u'https://i.scdn.co/image/6f3483e372bbb81cddb5fab16ebf50d2ac5009b9', u'width': 640, u'height': 640}, {u'url': u'https://i.scdn.co/image/2af1735e2281011bfc05353bfdee906338cbbb5b', u'width': 300, u'height': 300}, {u'url': u'https://i.scdn.co/image/8fdf1e6d19739b620107746d44332860d947f9df', u'width': 64, u'height': 64}], u'type': u'album', u'id': u'1r0DOIO0iC0bGpMtWRFdde', u'available_markets': [u'CA', u'MX', u'US']}, 
+	u'name': u"God's Plan", 
+	u'uri': u'spotify:track:2XW4DbS6NddZxRPm5rMCeY', 
+	u'external_urls': {u'spotify': u'https://open.spotify.com/track/2XW4DbS6NddZxRPm5rMCeY'}, 
+	u'popularity': 83, 
+	u'explicit': True, 
+	u'preview_url': None, 
+	u'track_number': 1, 
+	u'disc_number': 1, 
+	u'href': u'https://api.spotify.com/v1/tracks/2XW4DbS6NddZxRPm5rMCeY', 
+	u'artists': 
+		[{u'name': u'Drake', u'external_urls': {u'spotify': u'https://open.spotify.com/artist/3TVXtAsR1Inumwj472S9r4'}, u'uri': u'spotify:artist:3TVXtAsR1Inumwj472S9r4', u'href': u'https://api.spotify.com/v1/artists/3TVXtAsR1Inumwj472S9r4', u'type': u'artist', u'id': u'3TVXtAsR1Inumwj472S9r4'}], 
+	u'duration_ms': 198960, 
+	u'external_ids': {u'isrc': u'USCM51800004'}, 
+	u'type': u'track', 
+	u'id': u'2XW4DbS6NddZxRPm5rMCeY', 
+	u'available_markets': [u'CA', u'MX', u'US']}, 
+u'added_by': None, 
+u'added_at': u'2018-01-21T15:41:32Z'}
