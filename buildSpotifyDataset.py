@@ -20,13 +20,14 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
 	numTracks = results["tracks"]["total"]
 	trackItems = results["tracks"]["items"]
 
-	print "Album name: " + results['name']
+	print "Playlist name: " + results['name']
 	print "Description: " + results['description']
 	print "Number of followers: " + str(results['followers']['total'])
 	print "Number of tracks: " + str(numTracks)
 	print ""
 
 	tracks = []
+	counter = 1
 	for item in trackItems:
 		t = Track()
 		t.name = item['track']['name']#.encode("cp850")
@@ -38,17 +39,22 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
 		artists = []
 		for artist in item['track']['artists']:
 			a = Artist(artist['name'], artist['uri'])
-			# todo: use href to crossreference artist, to get their genres, numFollowers, URI, etc.
+			artistMoreDetails = spotify.artist(artist['uri'])
+			a.genres = artistMoreDetails['genres']
+			a.popularity = artistMoreDetails['popularity']
+			a.numFollowers = artistMoreDetails['followers']['total']
 			artists.append(a)
 		t.artists = artists
 		tracks.append(t)
-
+		if counter % 5 == 0:
+			print "finished getting data for %s/%s tracks" % (counter, numTracks)
+		counter += 1
+	print "finished getting data for %s/%s tracks" % (counter, numTracks)
+	
 	return tracks
 
 def printTracks(tracks):
 	for i in range(len(tracks)):
-		# change enconding for names to cp850 when printing, so that "registered" sign does not cause error
-		#print(tracks[i].name).encode("cp850") 
 		print(tracks[i])
 		print ""
 

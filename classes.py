@@ -8,18 +8,19 @@ class Artist():
 		self.name = ""
 		self.URI = ""
 		self.numFollowers = None
-		#self.popularity = None
-		#self.genres = []
+		self.popularity = None
+		self.genres = []
 
 	def __init__(self, name, URI = ""):
 		self.name = name
 		self.URI = URI
 		self.numFollowers = None
-		#self.popularity = None
-		#self.genres = []
+		self.popularity = None
+		self.genres = []
 
 	def __repr__(self):
-		return "<Artist name:%s URI:%s numFollowers:%s>" % (self.name.encode("ascii", "replace"), self.URI, self.numFollowers)
+		return "<Artist name:%s URI:%s numFollowers:%s> popularity:%s genres: %s" % (self.name.encode("ascii", "replace"), 
+			self.URI, self.numFollowers, self.popularity, str(self.genres))
 
 
 class Album():
@@ -33,7 +34,7 @@ class Album():
 		self.name = name
 		self.URI = URI
 		#self.genres = []
-		self.isSingle = None
+		#self.isSingle = None
 
 	def __repr__(self):
 		return "<Album name:%s URI:%s>" % (self.name.encode("ascii", "replace"), self.URI)
