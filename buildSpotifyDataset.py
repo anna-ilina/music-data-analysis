@@ -30,21 +30,23 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
 	for item in trackItems:
 		t = Track()
 		t.name = item['track']['name']#.encode("cp850")
+		t.URI = item['track']['uri']
 		t.popularity = item['track']['popularity']
 		t.dureationMs = item['track']['duration_ms']
+		t.availableMarkets = item['track']['available_markets']
+		t.album = Album(item['track']['album']['name'], item['track']['album']['uri'])
 		artists = []
 		for artist in item['track']['artists']:
-			a = Artist(artist['name'])
+			a = Artist(artist['name'], artist['uri'])
 			# todo: use href to crossreference artist, to get their genres, numFollowers, URI, etc.
 			artists.append(a)
 		t.artists = artists
-		t.availableMarkets = item['track']['available_markets']
 		tracks.append(t)
 
 	return tracks
 
 def printTracks(tracks):
-	for i in range(50):
+	for i in range(len(tracks)):
 		# change enconding for names to cp850 when printing, so that "registered" sign does not cause error
 		#print(tracks[i].name).encode("cp850") 
 		print(tracks[i])

@@ -1,5 +1,8 @@
 # Class containing information on tracks
 
+# todo: using name.encode("ascii", "replace") when printing causes some characters (ie the 'o' in "MO") to be replace with '?'
+#	is there a better encoding?
+
 class Artist():
 	def __init__(self):
 		self.name = ""
@@ -16,7 +19,7 @@ class Artist():
 		#self.genres = []
 
 	def __repr__(self):
-		return "<Artist name:%s URI:%s numFollowers:%s>" % (self.name.encode("cp850"), self.URI, self.numFollowers)
+		return "<Artist name:%s URI:%s numFollowers:%s>" % (self.name.encode("ascii", "replace"), self.URI, self.numFollowers)
 
 
 class Album():
@@ -24,14 +27,16 @@ class Album():
 		self.name = ""
 		self.URI = ""
 		#self.genres = []
+		#self.isSingle = None
 
 	def __init__(self, name, URI):
 		self.name = name
 		self.URI = URI
 		#self.genres = []
+		self.isSingle = None
 
 	def __repr__(self):
-		return "<Album name:%s URI:%s>" % (self.name.encode("cp850"), self.URI)
+		return "<Album name:%s URI:%s>" % (self.name.encode("ascii", "replace"), self.URI)
 
 
 class Track():  
@@ -39,6 +44,7 @@ class Track():
 		self.name = ""
 		self.URI = ""
 		self.artists = []			# list of Artist objects
+		self.numArtists = None
 		self.album = None			# Album object
 		self.popularity = None		# popularity rating out (0-100), based on Spotify algorithm taking
 									#    into account number of listens and how recent these listens were
@@ -51,5 +57,5 @@ class Track():
 
 	def __repr__(self):
 		return "<Track name:%s URI:%s artists:%s album:%s popularity:%s durationMs:%s availableMarkets:%s>" \
-		% (self.name.encode("cp850"), self.URI, self.artists, self.album, self.popularity, self.durationMs, self.availableMarkets)
+		% (self.name.encode("ascii", "replace"), self.URI, self.artists, self.album, self.popularity, self.durationMs, self.availableMarkets)
 
