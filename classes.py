@@ -3,6 +3,8 @@
 # todo: using name.encode("ascii", "replace") when printing causes some characters (ie the 'o' in "MO") to be replace with '?'
 #	is there a better encoding?
 
+#todo: add 'danceablity' or 'tempo' attributes to Track class?
+
 class Artist():
 	def __init__(self):
 		self.name = ""
@@ -19,7 +21,8 @@ class Artist():
 		self.genres = []
 
 	def __repr__(self):
-		return "<Artist name:%s URI:%s numFollowers:%s> popularity:%s genres: %s" % (self.name.encode("ascii", "replace"), 
+		return "<Artist name:%s URI:%s numFollowers:%s> popularity:%s genres: %s" \
+		% (self.name.encode("ascii", "replace"), 
 			self.URI, self.numFollowers, self.popularity, str(self.genres))
 
 
@@ -51,12 +54,23 @@ class Track():
 									#    into account number of listens and how recent these listens were
 		self.durationMs = None		# track duration in milliseconds
 		self.availableMarkets = [] 	# list of countries where track is available
-		#self.albumGenres = []		# todo: spotipy does not seem to return genre. Perhaps it is returning
-									#   the simplified Album object?
-		#self.artistGenres = []
-		#self.tempo = None
+		self.energy = None
+		self.tempo = None
+		self.acousticness = None
+		self.instrumentalness = None
+		self.timeSignature = None
+		self.danceablity = None
+		self.key = None
+		self.mode = None			# Major is represented by 1 and minor is 0.
+		self.valence = None			# A measure from 0.0 to 1.0 describing the musical positiveness conveyed 
+									# 	by a track. Tracks with high valence sound more positive (e.g. happy, 
+									# 	cheerful, euphoric), while tracks with low valence sound more negative 
+									# 	(e.g. sad, depressed, angry).
 
 	def __repr__(self):
-		return "<Track name:%s URI:%s artists:%s album:%s popularity:%s durationMs:%s availableMarkets:%s>" \
-		% (self.name.encode("ascii", "replace"), self.URI, self.artists, self.album, self.popularity, self.durationMs, self.availableMarkets)
+		return "<Track name:%s URI:%s artists:%s album:%s popularity:%s durationMs:%s availableMarkets:%s " \
+		"energy:%s tempo: %s acousticness:%s instrumentalness:%s timeSignature:%s danceablity:%s key:%s " \
+		"mode:%s valence:%s>"% (self.name.encode("ascii", "replace"), self.URI, self.artists, self.album,
+			self.popularity, self.durationMs, self.availableMarkets, self.energy, self.tempo, self.acousticness,
+			self.instrumentalness, self.timeSignature, self.danceablity, self.key, self.mode, self.valence)
 

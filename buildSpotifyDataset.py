@@ -2,10 +2,12 @@
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-import json
 from classes import *
 from authorizationInformation import CLIENT_ID, CLIENT_SECRET
+# import json
 
+#todo: change playlist to "Canada Top 50"
+#todo: functions to write to csv, read from csv
 
 def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret):
 
@@ -27,11 +29,14 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
 	print ""
 
 	tracks = []
+	trackURIs = []
+	artistURIs = []
 	counter = 1
 	for item in trackItems:
 		t = Track()
 		t.name = item['track']['name']#.encode("cp850")
 		t.URI = item['track']['uri']
+		trackURIs.append(t.URI)
 		t.popularity = item['track']['popularity']
 		t.dureationMs = item['track']['duration_ms']
 		t.availableMarkets = item['track']['available_markets']
@@ -39,7 +44,8 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
 		artists = []
 		for artist in item['track']['artists']:
 			a = Artist(artist['name'], artist['uri'])
-			artistMoreDetails = spotify.artist(artist['uri'])
+			# cross reference artist, to get more artist information (genres, popularity, number of followers)
+			artistMoreDetails = spotify.artist(artist['uri']) #todo: would be faster to call "artists" at end (takes multiple artist names at a time)
 			a.genres = artistMoreDetails['genres']
 			a.popularity = artistMoreDetails['popularity']
 			a.numFollowers = artistMoreDetails['followers']['total']
@@ -50,7 +56,27 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
 			print "finished getting data for %s/%s tracks" % (counter, numTracks)
 		counter += 1
 	print "finished getting data for %s/%s tracks" % (counter, numTracks)
-	
+
+	# Get audio features for track. Assuming playlist has at most 50 tracks, 
+	# since .audio_features takes a list of URIs for at most 50 tracks
+	audio_features = spotify.audio_features(trackURIs)
+	for i in range(len(tracks)):
+		if tracks[i].URI != audio_features[i]['uri']:
+			print("ID of track and audio feature don't match")
+			exit(1)
+		tracks[i].energy = audio_features[i]['energy']
+		tracks[i].tempo = audio_features[i]['tempo']
+		tracks[i].acousticness = audio_features[i]['acousticness']
+		tracks[i].instrumentalness = audio_features[i]['instrumentalness']
+		tracks[i].timeSignature = audio_features[i]['time_signature']
+		tracks[i].danceability = audio_features[i]['danceability']
+		tracks[i].key = audio_features[i]['key']
+		tracks[i].mode = audio_features[i]['mode'] 
+		tracks[i].valence = audio_features[i]['valence']
+		# tracks[i].speechiness = audio_features[i]['speechiness']
+		# tracks[i].loudness = audio_features[i]['loudness']
+		# tracks[i].liveness = audio_features[i]['liveness']
+
 	return tracks
 
 def printTracks(tracks):
@@ -62,7 +88,7 @@ def main():
 	canadaHotHitsPlaylistURI = "37i9dQZF1DWXT8uSSn6PRy"
 	user = "Spotify"
 	tracks = getTrackDataFromPlaylist(canadaHotHitsPlaylistURI, user, CLIENT_ID, CLIENT_SECRET)
-	printTracks(tracks)
+	printTracks(tracks[:3])
 
 if __name__ == '__main__':
 	main()
