@@ -31,7 +31,6 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
     tracks = []
     trackURIs = []
     artistURIs = []
-    #counter = 1
     for item in trackItems:
         t = Track()
         t.name = item['track']['name']
@@ -44,13 +43,10 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
         artists = []
         for artist in item['track']['artists']:
             artists.append(artist['uri'])
+            artistURIs.append(artist['uri'])
         t.artists = artists # list of artist URIs,later replaced with artist objects
         t.numArtists = len(artists)
         tracks.append(t)
-    #     if counter % 5 == 0:
-    #         print "finished getting track data for %s/%s tracks" % (counter, numTracks)
-    #     counter += 1
-    # print "finished getting track data for %s/%s tracks" % (counter - 1, numTracks)
     
     audio_features = spotify.audio_features(trackURIs)
     for i in range(len(tracks)):
@@ -72,22 +68,25 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
         # tracks[i].loudness = audio_features[i]['loudness']
         # tracks[i].liveness = audio_features[i]['liveness']
 
-        #Get artist information for track
-        # To speed up function, could get all artists at once and use number of
-        # artists per track to parse after
-        artistURIsCurrentTrack = tracks[i].artists
-        artistsMoreDetails = spotify.artists(artistURIsCurrentTrack)
-        artists = []
-        for artist in artistsMoreDetails['artists']:
+    artistURIsSublists = [artistURIs[i:i+50] for i in range(0, len(artistURIs), 50)]
+
+    artistsMoreDetails = []
+    for sublist in artistURIsSublists:
+        artistsMoreDetails.extend(spotify.artists(sublist)['artists'])
+
+    artistCounter = 0
+    for i in range(len(tracks)):
+        numArtists = tracks[i].numArtists
+        trackArtists = []
+        for j in range(artistCounter, artistCounter + numArtists):
+            artist = artistsMoreDetails[j]
             a = Artist(artist['name'], artist['uri'])
             a.genres = artist['genres']
             a.popularity = artist['popularity']
             a.numFollowers = artist['followers']['total']
-            artists.append(a)
-        tracks[i].artists = artists
-
-        if (i+1) % 5 == 0:
-            print "finished getting track data for %s/%s tracks" % (i+1, numTracks)
+            trackArtists.append(a)
+        tracks[i].artists = trackArtists
+        artistCounter += numArtists
 
     return tracks
 
@@ -161,9 +160,7 @@ def main():
     canadaHotHitsPlaylistURI = "37i9dQZF1DWXT8uSSn6PRy"
     user = "Spotify"
     tracks = getTrackDataFromPlaylist(canadaHotHitsPlaylistURI, user, CLIENT_ID, CLIENT_SECRET)
-
     printTracks(tracks[:3])
-
     writeToCSV('songs.csv', tracks)
 
 
