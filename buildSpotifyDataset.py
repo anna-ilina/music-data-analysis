@@ -2,6 +2,9 @@
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+import csv
+import unidecode
+>>>>>>> Stashed changes
 from classes import *
 from authorizationInformation import CLIENT_ID, CLIENT_SECRET
 # import json
@@ -84,11 +87,30 @@ def printTracks(tracks):
 		print(tracks[i])
 		print ""
 
+def writeToCSV(filename,tracks):
+        with open(filename, 'wb') as csvfile:
+                writer = csv.writer(csvfile, delimiter=',', quotechar='\'', quoting=csv.QUOTE_MINIMAL)
+                writer.writerow(['Song', 'Artist'])
+                for i in range(len(tracks)):
+                        song = tracks[i].name
+                        song = unidecode.unidecode(song)
+                        song = song.replace(',', ';')
+                        artists = tracks[i].artists[0].name
+                        artists = unidecode.unidecode(artists)
+                        artists = artists.replace(',', ';')
+                        writer.writerow([song, artists])
+                        
+                
+                
+
 def main():
 	canadaHotHitsPlaylistURI = "37i9dQZF1DWXT8uSSn6PRy"
 	user = "Spotify"
 	tracks = getTrackDataFromPlaylist(canadaHotHitsPlaylistURI, user, CLIENT_ID, CLIENT_SECRET)
+
 	printTracks(tracks[:3])
+	writeToCSV('songs.csv', tracks)
+
 
 if __name__ == '__main__':
 	main()
