@@ -4,7 +4,6 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import csv
 import unidecode
->>>>>>> Stashed changes
 from classes import *
 from authorizationInformation import CLIENT_ID, CLIENT_SECRET
 # import json
