@@ -21,7 +21,7 @@ class Artist():
 		self.genres = []
 
 	def __repr__(self):
-		return "<Artist name:%s URI:%s numFollowers:%s> popularity:%s genres: %s" \
+		return "<Artist name:%s URI:%s numFollowers:%s popularity:%s genres: %s" \
 		% (self.name.encode("ascii", "replace"), 
 			self.URI, self.numFollowers, self.popularity, str(self.genres))
 
