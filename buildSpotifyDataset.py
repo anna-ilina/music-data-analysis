@@ -68,6 +68,7 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
         # tracks[i].loudness = audio_features[i]['loudness']
         # tracks[i].liveness = audio_features[i]['liveness']
 
+    # get more detailed author information
     artistURIsSublists = [artistURIs[i:i+50] for i in range(0, len(artistURIs), 50)]
 
     artistsMoreDetails = []
@@ -157,9 +158,10 @@ def writeToCSV(filename,tracks):
                         
                 
 def main():
-    canadaHotHitsPlaylistURI = "37i9dQZF1DWXT8uSSn6PRy"
-    user = "Spotify"
-    tracks = getTrackDataFromPlaylist(canadaHotHitsPlaylistURI, user, CLIENT_ID, CLIENT_SECRET)
+    #canadaHotHitsPlaylistURI = "37i9dQZF1DWXT8uSSn6PRy"
+    globalTopPlaylistID = "37i9dQZEVXbMDoHDwVN2tF"
+    user = "spotifycharts"
+    tracks = getTrackDataFromPlaylist(globalTopPlaylistID, user, CLIENT_ID, CLIENT_SECRET)
     printTracks(tracks[:3])
     writeToCSV('songs.csv', tracks)
 
