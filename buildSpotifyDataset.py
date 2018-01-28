@@ -40,7 +40,7 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
 		t.URI = item['track']['uri']
 		trackURIs.append(t.URI)
 		t.popularity = item['track']['popularity']
-		t.dureationMs = item['track']['duration_ms']
+		t.durationMs = item['track']['duration_ms']
 		t.availableMarkets = item['track']['available_markets']
 		t.album = Album(item['track']['album']['name'], item['track']['album']['uri'])
 		artists = []
@@ -89,15 +89,64 @@ def printTracks(tracks):
 def writeToCSV(filename,tracks):
         with open(filename, 'wb') as csvfile:
                 writer = csv.writer(csvfile, delimiter=',', quotechar='\'', quoting=csv.QUOTE_MINIMAL)
-                writer.writerow(['Song', 'Artist'])
+                writer.writerow(['Song', 'Artist', 'Number of Followers','Popularity', 'Genres', 'Album', 'Available Markets', 'Duration in MS', 'Energy', 'Tempo', 'Acousticness', 'Instrumentalness', 'Time Signature', 'Danceability', 'Key', 'Mode', 'Valence'])
                 for i in range(len(tracks)):
+                        #Get song name
                         song = tracks[i].name
+                        #Replace weird characters
                         song = unidecode.unidecode(song)
+                        #replace comma because this is csv and it screws things up
                         song = song.replace(',', ';')
+
+                        #do the same for artist
                         artists = tracks[i].artists[0].name
                         artists = unidecode.unidecode(artists)
                         artists = artists.replace(',', ';')
-                        writer.writerow([song, artists])
+
+                        #Number followers
+                        numFollowers = tracks[i].artists[0].numFollowers
+                        
+                        #Popularity
+                        popularity = tracks[i].artists[0].popularity
+
+                        #genres
+                        genres = str(tracks[i].artists[0].genres)
+                        if genres == '[]':
+                                genres = 'NA'
+                        genres = genres.replace(',', ';')
+                       # genresList = []
+                        #for g in genres:
+                                #print(g)
+#                                g = g.replace(',',';')
+#                                genresList = genresList.append(g)
+
+                        #album name
+                        album = tracks[i].album.name
+                        album = unidecode.unidecode(album)
+                        album = album.replace(',',';')
+
+                        #Num artists
+                        #numArtists = tracks[i].numArtists
+
+                        #song info
+                        availableMarkets = str(tracks[i].availableMarkets)
+                        availableMarkets = availableMarkets.replace(',',';')
+
+                        durationMs = tracks[i].durationMs
+                        energy = tracks[i].energy
+                        tempo = tracks[i].tempo
+                        acousticness = tracks[i].acousticness
+                        instrumentalness = tracks[i].instrumentalness
+                        timeSignature = tracks[i].timeSignature
+                        danceability = tracks[i].danceability
+                        key = tracks[i].key
+                        mode = tracks[i].mode
+                        valence = tracks[i].valence
+
+
+                        
+                        #Duration, number artists
+                        writer.writerow([song, artists, numFollowers, popularity, genres, album, availableMarkets, durationMs, energy, tempo, acousticness, instrumentalness, timeSignature, danceability, key, mode,valence])
                         
                 
                 
