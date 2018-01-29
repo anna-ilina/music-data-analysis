@@ -123,10 +123,15 @@ def writeToCSV(filename,tracks):
                         popularity = tracks[i].artists[0].popularity
 
                         #genres
-                        genres = str(tracks[i].artists[0].genres)
-                        if genres == '[]':
+                        genres = str([g.encode('ascii','replace') for g in tracks[i].artists[0].genres])
+                        genres = genres[1:len(genres)-1]
+                        #genres = str(tracks[i].artists[0].genres).encode('ascii','replace')
+                        if genres == None or genres == '':
                                 genres = 'NA'
                         genres = genres.replace(',', ';')
+                        genres = genres.replace("'", '')
+                        
+                        #genres = genres.encode('ascii', 'replace')
                        # genresList = []
                         #for g in genres:
                                 #print(g)
@@ -139,9 +144,10 @@ def writeToCSV(filename,tracks):
                         album = album.replace(',',';')
 
                         #song info
-                        availableMarkets = str(tracks[i].availableMarkets)
+                        availableMarkets = str([a.encode('ascii','replace') for a in tracks[i].availableMarkets])
+                        availableMarkets = availableMarkets[1:len(availableMarkets)-1]
                         availableMarkets = availableMarkets.replace(',',';')
-
+                        availableMarkets = availableMarkets.replace("'", '')
                         durationMs = tracks[i].durationMs
                         energy = tracks[i].energy
                         tempo = tracks[i].tempo

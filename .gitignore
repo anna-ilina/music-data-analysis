@@ -1,3 +1,4 @@
 authorizationInformation.py
 spotifyGetRequests.py
 *.pyc
+*csv
