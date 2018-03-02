@@ -3,6 +3,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import csv
 import unidecode
 from classes import *
+from makeBoxPlots import *
 from authorizationInformation import CLIENT_ID, CLIENT_SECRET
 # import json
 
@@ -23,10 +24,12 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
     trackItems = results["tracks"]["items"]
 
     print "Playlist name: " + results['name']
-    print "Description: " + results['description']
+    #print "Description: " + results['description']
     print "Number of followers: " + str(results['followers']['total'])
     print "Number of tracks: " + str(numTracks)
     print ""
+
+    # results = spotify.search(q='artist:' + name, type='artist')
 
     tracks = []
     trackURIs = []
@@ -35,38 +38,35 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
         t = Track()
         t.name = item['track']['name']
         t.URI = item['track']['uri']
-        trackURIs.append(t.URI)
         t.popularity = item['track']['popularity']
         t.durationMs = item['track']['duration_ms']
         t.availableMarkets = item['track']['available_markets']
         t.album = Album(item['track']['album']['name'], item['track']['album']['uri'])
         artists = []
+        artistNames = []
         for artist in item['track']['artists']:
             artists.append(artist['uri'])
-            artistURIs.append(artist['uri'])
+            artistNames.append(artist['name'])
         t.artists = artists # list of artist URIs,later replaced with artist objects
         t.numArtists = len(artists)
+        isLocal = item['is_local'] # #if true, some error with song, cannot access features
+        if isLocal:
+            substituteTracks = spotify.search(q='track:'+t.name+' artist:'+artistNames[0], type='track')
+            firstSubstituteTrack = substituteTracks['tracks']['items'][0]
+            t.URI = firstSubstituteTrack['uri']
+            t.availableMarkets = firstSubstituteTrack['available_markets']
+            t.popularity = firstSubstituteTrack['popularity']
+            t.durationMs = firstSubstituteTrack['duration_ms']
+            firstSubstituteTrackArtists = firstSubstituteTrack['artists']
+            artists = []
+            for a in firstSubstituteTrackArtists:
+                artists.append(a['uri'])
+            t.artists = artists
+            t.numArtists = len(artists)
+        artistURIs.extend(t.artists)
+        trackURIs.append(t.URI)
         tracks.append(t)
-    
-    audio_features = spotify.audio_features(trackURIs)
-    for i in range(len(tracks)):
-        # Get audio features for track. Assuming playlist has at most 50 tracks, 
-        # since .audio_features takes a list of URIs for at most 50 tracks
-        if tracks[i].URI != audio_features[i]['uri']:
-            print("ID of track and audio feature don't match")
-            exit(1)
-        tracks[i].energy = audio_features[i]['energy']
-        tracks[i].tempo = audio_features[i]['tempo']
-        tracks[i].acousticness = audio_features[i]['acousticness']
-        tracks[i].instrumentalness = audio_features[i]['instrumentalness']
-        tracks[i].timeSignature = audio_features[i]['time_signature']
-        tracks[i].danceability = audio_features[i]['danceability']
-        tracks[i].key = audio_features[i]['key']
-        tracks[i].mode = audio_features[i]['mode'] 
-        tracks[i].valence = audio_features[i]['valence']
-        # tracks[i].speechiness = audio_features[i]['speechiness']
-        # tracks[i].loudness = audio_features[i]['loudness']
-        # tracks[i].liveness = audio_features[i]['liveness']
+
 
     # get more detailed author information
     artistURIsSublists = [artistURIs[i:i+50] for i in range(0, len(artistURIs), 50)]
@@ -88,6 +88,35 @@ def getTrackDataFromPlaylist(playlistName, playlistOwner, clientID, clientSecret
             trackArtists.append(a)
         tracks[i].artists = trackArtists
         artistCounter += numArtists
+    
+    audio_features = spotify.audio_features(trackURIs)
+    for i in range(len(tracks)):
+        # Get audio features for track. Assuming playlist has at most 50 tracks, 
+        # since .audio_features takes a list of URIs for at most 50 tracks
+        if tracks[i].URI != audio_features[i]['uri']:
+            print("Warning: ID of track and audio feature don't match")
+            print tracks[i].URI
+            print audio_features[i]['uri']
+            #exit(1)
+        tracks[i].energy = audio_features[i]['energy']
+        tracks[i].tempo = audio_features[i]['tempo']
+        tracks[i].acousticness = audio_features[i]['acousticness']
+        tracks[i].instrumentalness = audio_features[i]['instrumentalness']
+        tracks[i].timeSignature = audio_features[i]['time_signature']
+        tracks[i].danceability = audio_features[i]['danceability']
+        tracks[i].key = audio_features[i]['key']
+        tracks[i].mode = audio_features[i]['mode'] 
+        tracks[i].valence = audio_features[i]['valence']
+        # tracks[i].speechiness = audio_features[i]['speechiness']
+        # tracks[i].loudness = audio_features[i]['loudness']
+        # tracks[i].liveness = audio_features[i]['liveness']
+
+
+
+
+
+    #audioAnalysisExample = spotify.audio_analysis(tracks[0].URI)
+    #print(audioAnalysisExample)
 
     return tracks
 
@@ -165,11 +194,35 @@ def writeToCSV(filename,tracks):
                 
 def main():
     #canadaHotHitsPlaylistURI = "37i9dQZF1DWXT8uSSn6PRy"
-    globalTopPlaylistID = "37i9dQZEVXbMDoHDwVN2tF"
-    user = "spotifycharts"
-    tracks = getTrackDataFromPlaylist(globalTopPlaylistID, user, CLIENT_ID, CLIENT_SECRET)
+    #globalTopPlaylistID = "37i9dQZEVXbMDoHDwVN2tF"
+    #billboardPlaylistID = "6UeSakyzhiEt4NB3UAd6NQ"
+    billboard2016PlaylistID = "2LWafCgWzsXGWv7wJeePjA"
+    billboard2017PlaylistID = "3CWVCLSmoT7speb9E5b9st"
+    #user = "billboard.com"
+    user = "hitsebeats"
+    tracks = getTrackDataFromPlaylist(billboard2017PlaylistID, user, CLIENT_ID, CLIENT_SECRET)
     printTracks(tracks[:3])
-    writeToCSV('songs.csv', tracks)
+    writeToCSV('songsBillboard2017.csv', tracks)
+
+
+    energy = []
+    acousticness = []
+    instrumentalness = []
+    danceability = []
+    valence = []
+
+    for t in tracks:
+        energy.append(t.energy)
+        acousticness.append(t.acousticness)
+        danceability.append(t.danceability)
+        valence.append(t.valence)
+        instrumentalness.append(t.instrumentalness)
+
+    makeBoxPlots(energy, acousticness, danceability, valence, instrumentalness)
+
+
+
+
 
 
 if __name__ == '__main__':
