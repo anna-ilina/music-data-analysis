@@ -1,6 +1,6 @@
 # get 1960-1964 data from: https://github.com/mikkelkrogsholm/billboard
 # get 1965-2015 data from: https://www.kaggle.com/rakannimer/billboard-lyrics/data
-# get 2016-2017 data from:
+# get 2016-2017 data from: get 2016-2017 top 100 billboard songs from spotify web api, get lyrics from PyLyrics (lyrics.wikia.com)
 
 # Want excel format to be: 
 # rank, song, artist, year, lyrics
