@@ -1,7 +1,3 @@
-# Could explore:
-# - most popular songs by year
-
-
 songs = {}
 availableLyrics = {}
 countMissingLyrics = 0
