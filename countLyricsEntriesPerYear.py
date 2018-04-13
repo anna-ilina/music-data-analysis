@@ -29,14 +29,16 @@ with open('assembledLyrics.csv', 'rb') as inFile:
 
 	print lines[2].split(",")
 
-#songs = sorted(songs)
-
+#Get counts for missing songs per year (out of 100)
+print ("Get count for missing songs per year (out of 100)")
 for key in sorted(songs):
 	print("%s %s") % (key, songs[key])
 
-print numSongs
-print countMissingLyrics
-print countMissingLyrics / float(numSongs)
-
+#Get counts for missing song lyrics per year (out of 100)
+print ("\nGet counts for missing song lyrics per year (out of 100)")
 for key in sorted(availableLyrics):
 	print("%s %s") % (key, availableLyrics[key])
+
+print ("\nNumber of songs in our 1960-2017 dataset: " + str(numSongs))
+print ("Number of songs with missing lyrics in our 1960-2017 dataset: " + str(countMissingLyrics))
+print ("Percentage of songs with missing lyrics in our 1960-2017 dataset: " + str(countMissingLyrics / float(numSongs)))
