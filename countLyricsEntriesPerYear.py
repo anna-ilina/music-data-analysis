@@ -14,7 +14,7 @@ with open('assembledLyrics.csv', 'rb') as inFile:
 		else:
 			songs[year] = 1			
 		lyrics = line[4]
-		if lyrics == "NA" or lyrics == "NA\n" or lyrics.isspace():
+		if lyrics == "NA" or lyrics == "NA\n" or lyrics.isspace() or len(lyrics) < 100:
 			countMissingLyrics += 1
 			#print(lyrics)
 		else:
